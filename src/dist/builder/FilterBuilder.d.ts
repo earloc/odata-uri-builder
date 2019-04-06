@@ -1,0 +1,36 @@
+import { IFilterClause } from "../models/IFilterClause";
+import { IFilterGroup } from "../models/IFilterGroup";
+import { FilterOperator, FilterValue } from "../models/Types";
+import { CountByBuilder } from "./CountByBuilder";
+import { GroupByBuilder } from "./GroupByBuilder";
+import { OrderByBuilder } from "./OrderByBuilder";
+import { PathExpression, Query } from "./Query";
+export declare class FilterBuilder<TEntity> {
+    private _Query;
+    readonly isEmpty: boolean;
+    readonly group: GroupByBuilder<TEntity>;
+    readonly order: OrderByBuilder<TEntity>;
+    readonly countBy: CountByBuilder<TEntity>;
+    readonly query: Query<TEntity>;
+    private _Clauses;
+    private _PathResolver;
+    constructor(_Query: Query<TEntity>);
+    add(...filterClauses: IFilterClause[]): this;
+    addGroup(...filterGroups: IFilterGroup[]): this;
+    and<TProperty, TValue>(path: PathExpression<TEntity, TProperty, TValue>, operator: FilterOperator, value: TValue): FilterBuilder<TEntity>;
+    or<TProperty extends keyof TEntity, TValue>(propertyExpression: PathExpression<TEntity, TProperty, TValue>, operator: FilterOperator, value: TValue): FilterBuilder<TEntity>;
+    andBy(property: string, operator: FilterOperator, value: FilterValue): FilterBuilder<TEntity>;
+    count(value?: boolean): FilterBuilder<TEntity>;
+    toPartialString(): string;
+    top(value: number): Query<TEntity>;
+    skip(value: number): Query<TEntity>;
+    toString(): string;
+    private filter;
+    private filterBy;
+    private getStringifiedFilterClause;
+    private getDefaultFilterString;
+    private getDateFilterString;
+    private getContainsFilterString;
+    private getNavigationPropertyFilterString;
+}
+export declare function isFilterClause(obj: any): obj is IFilterClause;
